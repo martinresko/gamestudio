@@ -1,13 +1,13 @@
-package sk.tuke.gamestudio.game.mines.core;
+package sk.tuke.gamestudio.game.tentrix;
 
 public abstract class Tile {
-    private TileState state = TileState.CLOSED;
+    private TileState state = TileState.EMPTY;
 
     public TileState getState() {
         return state;
     }
 
-    void setState(TileState state) {
+     void setState(TileState state) {
         this.state = state;
     }
 }
