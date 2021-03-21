@@ -1,13 +1,15 @@
 package sk.tuke.gamestudio.game.tentrix;
 
-public abstract class Tile {
-    private TileState state = TileState.EMPTY;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import sk.tuke.gamestudio.game.tentrix.enums.TileState;
 
-    public TileState getState() {
-        return state;
-    }
+@AllArgsConstructor
+@Getter
+@Setter
+public class Tile {
 
-     void setState(TileState state) {
-        this.state = state;
-    }
+    private TileState state;
+
 }
