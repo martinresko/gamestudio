@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.game.tentrix.core;
+package sk.tuke.gamestudio.game.tentrix.models;
 
 
 import lombok.AccessLevel;

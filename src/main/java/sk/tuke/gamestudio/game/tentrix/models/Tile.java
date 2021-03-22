@@ -1,4 +1,4 @@
-package sk.tuke.gamestudio.game.tentrix;
+package sk.tuke.gamestudio.game.tentrix.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,36 +1,35 @@
 package sk.tuke.gamestudio.game.tentrix.consoleui;
 
-import sk.tuke.gamestudio.game.tentrix.Tile;
-import sk.tuke.gamestudio.game.tentrix.core.Field;
-import sk.tuke.gamestudio.game.tentrix.core.Shape;
+import lombok.AllArgsConstructor;
 import sk.tuke.gamestudio.game.tentrix.enums.GameState;
 import sk.tuke.gamestudio.game.tentrix.enums.TileState;
+import sk.tuke.gamestudio.game.tentrix.models.Field;
+import sk.tuke.gamestudio.game.tentrix.models.Shape;
+import sk.tuke.gamestudio.game.tentrix.models.Tile;
+import sk.tuke.gamestudio.game.tentrix.service.GameEngineService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@AllArgsConstructor
 public class ConsoleUI {
 
     public static final String GAME_NAME = "tentrix";
 
     private final Field field;
 
-    public ConsoleUI(Field field) {
-        this.field = field;
-    }
-
-    Random random = new Random();
-
+    private final GameEngineService gameEngineService;
 
     public void play() {
         do {
             printField();
             printShapeOptions();
+            Random random = new Random();
 
             int first = random.nextInt(9);
             int second = random.nextInt(9);
             System.out.println("First: " + first + " second: " + second);
+
             processInput(first, second, field.getShapes().get(0));
         } while (field.getState() == GameState.PLAYING);
 
@@ -77,21 +76,21 @@ public class ConsoleUI {
         System.out.println(field.getShapes().get(2).getPattern());
     }
 
-    private void processInput(int x, int y, Shape tempName) {
+    private void processInput(int x, int y, Shape shape) {
         int xCoordinate = --x;
         int yCoordinate = --y;
         List<Tile> pickedTiles;
-        int[][] coordinates = tempName.getCoordinates();
+        int[][] coordinates = shape.getCoordinates();
 
         try {
-            pickedTiles = retrieveTiles(xCoordinate, yCoordinate, coordinates[0]);
+            pickedTiles = this.gameEngineService.retrieveTiles(xCoordinate, yCoordinate, coordinates[0], this.field);
         } catch (Exception e) {
             System.out.println("Nevojde sa ti to tam");
             field.setState(GameState.FAILED);
             return;
         }
 
-        if (SpaceAvailabilityCheck(pickedTiles)) {
+        if (gameEngineService.SpaceAvailabilityCheck(pickedTiles)) {
             System.out.println("Nevojde sa ti to tam");
             field.setState(GameState.FAILED);
             return;
@@ -99,20 +98,6 @@ public class ConsoleUI {
 
         pickedTiles.forEach(tile -> tile.setState(TileState.FULL));
         //field.setState(GameState.SOLVED);
-    }
-
-    private boolean SpaceAvailabilityCheck(List<Tile> pickedTiles) {
-        return pickedTiles.stream().anyMatch(tile -> tile.getState() == TileState.FULL);
-    }
-
-    private List<Tile> retrieveTiles(int xCoordinate, int yCoordinate, int[] coordinates) {
-        List<Tile> pickedTiles = new ArrayList<>();
-
-        pickedTiles.add(field.getTile(coordinates[0]+xCoordinate, coordinates[1]+yCoordinate));
-        pickedTiles.add(field.getTile(coordinates[2]+xCoordinate, coordinates[3]+yCoordinate));
-        pickedTiles.add(field.getTile(coordinates[4]+xCoordinate, coordinates[5]+yCoordinate));
-        pickedTiles.add(field.getTile(coordinates[6]+xCoordinate, coordinates[7]+yCoordinate));
-        return pickedTiles;
     }
 
 }

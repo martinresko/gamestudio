@@ -1,8 +1,7 @@
-package sk.tuke.gamestudio.game.tentrix.core;
+package sk.tuke.gamestudio.game.tentrix.models;
 
 import lombok.Getter;
 import lombok.Setter;
-import sk.tuke.gamestudio.game.tentrix.Tile;
 import sk.tuke.gamestudio.game.tentrix.enums.GameState;
 import sk.tuke.gamestudio.game.tentrix.enums.TileState;
 
