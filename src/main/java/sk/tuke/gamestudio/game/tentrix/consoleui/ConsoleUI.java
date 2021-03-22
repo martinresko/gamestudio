@@ -6,11 +6,10 @@ import sk.tuke.gamestudio.game.tentrix.enums.TileState;
 import sk.tuke.gamestudio.game.tentrix.models.Field;
 import sk.tuke.gamestudio.game.tentrix.models.Shape;
 import sk.tuke.gamestudio.game.tentrix.models.Tile;
+import sk.tuke.gamestudio.game.tentrix.models.UserInput;
 import sk.tuke.gamestudio.game.tentrix.service.GameEngineService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 @AllArgsConstructor
 public class ConsoleUI {
@@ -25,19 +24,12 @@ public class ConsoleUI {
         do {
             printField();
             printShapeOptions();
-
-            Scanner readinput = new Scanner(System.in);
-
-            System.out.println("Vložte X-ovú súradnicu:");
-            int xCoordinate = readinput.nextInt(10);
-            System.out.println("Vložte Y-lónovú súradnicu:");
-            int yCoordinate = readinput.nextInt(10);
-
-            System.out.println("Vyberte si jednu z možností");
-            int chosenShape = readinput.nextInt(3);
-            processInput(xCoordinate, yCoordinate, field.getShapes().get(chosenShape));
-
+            UserInput userInput = gameEngineService.gainUserInput();
+            //TODO: prerobit user input na shape z int na char a potom v userInput triede spravit mapovanie z charu na int
+            processInput(userInput.getXCoordinate(), userInput.getYCoordinate(), field.getShapes().get(userInput.getShape()));
             clearFullLines();
+            System.out.println("input: " + userInput);
+
             //TODO: skontroluj, ci hrac neprehral
             //checkForGameOver();
         } while (field.getState() == GameState.PLAYING);
@@ -52,21 +44,8 @@ public class ConsoleUI {
     }
 
     private void clearFullLines() {
-        List<Tile> tilesInColumn = new ArrayList<>();
-        for(int columnNumber = 0; columnNumber < field.getColCount(); columnNumber++) {
-            if(gameEngineService.isColumnFull(columnNumber, tilesInColumn)) {
-                tilesInColumn.forEach(tile -> tile.setState(TileState.EMPTY));
-            }
-            tilesInColumn.clear();
-        }
-
-        List<Tile> tilesInRow = new ArrayList<>();
-        for(int rowNumber = 0; rowNumber < field.getRowCount(); rowNumber++) {
-            if(gameEngineService.isRowFull(rowNumber, tilesInRow)) {
-                tilesInRow.forEach(tile -> tile.setState(TileState.EMPTY));
-            }
-            tilesInRow.clear();
-        }
+        gameEngineService.clearFullColumns();
+        gameEngineService.clearFullRows();
     }
 
     private void printField() {
@@ -75,15 +54,8 @@ public class ConsoleUI {
             for (int column = 0; column <= field.getColCount()-1 ; column++)
             {
                 Tile tile = field.getTile(column,row);
-
-                if (tile.getState() == TileState.EMPTY) {
-                    System.out.print(" - ");
-                }
-                else if(tile.getState() == TileState.FULL){
-                    System.out.print(" X ");
-                } else {
-                    throw new RuntimeException("nedefinovany stav");
-                }
+                String output = tile.getState() == TileState.EMPTY ? " - " : " X ";
+                System.out.print(output);
             }
             System.out.println();
         }

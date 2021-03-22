@@ -15,16 +15,12 @@ public class Field {
    private GameState state = GameState.PLAYING;
 
    private final int rowCount;
-
    private final int colCount;
-
    private int shapeCount;
 
    private final Tile[][] tiles;
-
    private List<Shape> shapes = new LinkedList<>();
 
-   //TODO: prerobit ho na singleton
     public Field(int rowCount, int colCount, int shapeCount) {
         this.rowCount = rowCount;
         this.colCount = colCount;
@@ -43,11 +39,11 @@ public class Field {
     }
 
     private void initializeTiles() {
-        for (int row = 0; row < rowCount; row++) {
-            for (int column = 0; column < colCount; column++) {
-                Tile tile = getTile(row, column);
+        for (int column = 0; column < colCount; column++) {
+            for (int row = 0; row < rowCount; row++) {
+                Tile tile = getTile(column, row);
                 if (tile == null) {
-                    tiles[row][column] = new Tile(TileState.EMPTY);
+                    tiles[column][row] = new Tile(TileState.EMPTY);
                 }
             }
         }
