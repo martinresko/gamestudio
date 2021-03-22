@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
         Field field = new Field(9, 9, 3);
-        GameEngineService gameEngineService = new GameEngineService();
+        GameEngineService gameEngineService = new GameEngineService(field);
         ConsoleUI ui = new ConsoleUI(field, gameEngineService);
         ui.play();
     }

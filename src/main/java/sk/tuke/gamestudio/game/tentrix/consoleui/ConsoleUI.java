@@ -8,8 +8,9 @@ import sk.tuke.gamestudio.game.tentrix.models.Shape;
 import sk.tuke.gamestudio.game.tentrix.models.Tile;
 import sk.tuke.gamestudio.game.tentrix.service.GameEngineService;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Scanner;
 
 @AllArgsConstructor
 public class ConsoleUI {
@@ -24,14 +25,21 @@ public class ConsoleUI {
         do {
             printField();
             printShapeOptions();
-            Random random = new Random();
 
-            int first = random.nextInt(9);
-            int second = random.nextInt(9);
-            System.out.println("First: " + first + " second: " + second);
+            Scanner readinput = new Scanner(System.in);
 
-            //TODO namiesto get(0) a random first a second uzivatelsky vyber
-            processInput(first, second, field.getShapes().get(0));
+            System.out.println("Vložte X-ovú súradnicu:");
+            int xCoordinate = readinput.nextInt(10);
+            System.out.println("Vložte Y-lónovú súradnicu:");
+            int yCoordinate = readinput.nextInt(10);
+
+            System.out.println("Vyberte si jednu z možností");
+            int chosenShape = readinput.nextInt(3);
+            processInput(xCoordinate, yCoordinate, field.getShapes().get(chosenShape));
+
+            clearFullLines();
+            //TODO: skontroluj, ci hrac neprehral
+            //checkForGameOver();
         } while (field.getState() == GameState.PLAYING);
 
         printField();
@@ -40,6 +48,24 @@ public class ConsoleUI {
             System.out.println("Game failed!");
         } else {
             System.out.println("Game solved!");
+        }
+    }
+
+    private void clearFullLines() {
+        List<Tile> tilesInColumn = new ArrayList<>();
+        for(int columnNumber = 0; columnNumber < field.getColCount(); columnNumber++) {
+            if(gameEngineService.isColumnFull(columnNumber, tilesInColumn)) {
+                tilesInColumn.forEach(tile -> tile.setState(TileState.EMPTY));
+            }
+            tilesInColumn.clear();
+        }
+
+        List<Tile> tilesInRow = new ArrayList<>();
+        for(int rowNumber = 0; rowNumber < field.getRowCount(); rowNumber++) {
+            if(gameEngineService.isRowFull(rowNumber, tilesInRow)) {
+                tilesInRow.forEach(tile -> tile.setState(TileState.EMPTY));
+            }
+            tilesInRow.clear();
         }
     }
 
@@ -61,7 +87,6 @@ public class ConsoleUI {
             }
             System.out.println();
         }
-
     }
 
     private void printShapeOptions() {
@@ -84,7 +109,7 @@ public class ConsoleUI {
         int[][] coordinates = shape.provideShapeCoordinates();
 
         try {
-            pickedTiles = this.gameEngineService.retrieveTiles(xCoordinate, yCoordinate, coordinates[0], this.field);
+            pickedTiles = this.gameEngineService.retrieveTiles(xCoordinate, yCoordinate, coordinates[0]);
         } catch (Exception e) {
             System.out.println("Nevojde sa ti to tam");
             field.setState(GameState.FAILED);
@@ -101,4 +126,6 @@ public class ConsoleUI {
         //field.setState(GameState.SOLVED);
     }
 
+/*    private void checkForGameOver() {
+    }*/
 }

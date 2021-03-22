@@ -24,6 +24,7 @@ public class Field {
 
    private List<Shape> shapes = new LinkedList<>();
 
+   //TODO: prerobit ho na singleton
     public Field(int rowCount, int colCount, int shapeCount) {
         this.rowCount = rowCount;
         this.colCount = colCount;
@@ -52,8 +53,8 @@ public class Field {
         }
     }
 
-    public Tile getTile(int row, int column) {
-        return tiles[row][column];
+    public Tile getTile(int column, int row) {
+        return tiles[column][row];
     }
 
 }
