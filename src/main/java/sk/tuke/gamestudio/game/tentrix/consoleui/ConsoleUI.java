@@ -10,6 +10,7 @@ import sk.tuke.gamestudio.game.tentrix.models.UserInput;
 import sk.tuke.gamestudio.game.tentrix.service.GameEngineService;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @AllArgsConstructor
 public class ConsoleUI {
@@ -25,10 +26,9 @@ public class ConsoleUI {
             printField();
             printShapeOptions();
             UserInput userInput = gameEngineService.gainUserInput();
-            //TODO: prerobit user input na shape z int na char a potom v userInput triede spravit mapovanie z charu na int
             processInput(userInput.getXCoordinate(), userInput.getYCoordinate(), field.getShapes().get(userInput.getShape()));
             clearFullLines();
-            System.out.println("input: " + userInput);
+            removeUsedShape(userInput.getShape());
 
             //TODO: skontroluj, ci hrac neprehral
             //checkForGameOver();
@@ -62,16 +62,12 @@ public class ConsoleUI {
     }
 
     private void printShapeOptions() {
-        System.out.println("Moznost A je:");
-        System.out.println(field.getShapes().get(0).getPattern());
-
-        System.out.println();
-        System.out.println("Moznost B je:");
-        System.out.println(field.getShapes().get(1).getPattern());
-
-        System.out.println();
-        System.out.println("Moznost C je:");
-        System.out.println(field.getShapes().get(2).getPattern());
+        AtomicInteger shapeIndex = new AtomicInteger();
+        field.getShapes().forEach(shape -> {
+            System.out.println("Moznost cislo " + (shapeIndex.get() + 1) + ": ");
+            System.out.println(field.getShapes().get(shapeIndex.get()).getPattern());
+            shapeIndex.set(shapeIndex.get() + 1);
+        });
     }
 
     private void processInput(int x, int y, Shape shape) {
@@ -95,7 +91,13 @@ public class ConsoleUI {
         }
 
         pickedTiles.forEach(tile -> tile.setState(TileState.FULL));
-        //field.setState(GameState.SOLVED);
+    }
+
+    private void removeUsedShape(int shapeIndex) {
+        field.getShapes().remove(shapeIndex);
+        if(field.getShapes().isEmpty()) {
+            field.generateShapes();
+        }
     }
 
 /*    private void checkForGameOver() {

@@ -32,7 +32,7 @@ public class Field {
         initializeTiles();
     }
 
-    private void generateShapes() {
+    public void generateShapes() {
         shapes.add(Shape.create());
         shapes.add(Shape.create());
         shapes.add(Shape.create());

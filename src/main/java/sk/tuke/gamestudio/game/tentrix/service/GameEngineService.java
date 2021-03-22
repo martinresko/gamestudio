@@ -56,12 +56,13 @@ public class GameEngineService {
     public UserInput gainUserInput() {
         UserInput userInput = new UserInput();
 
+        //TODO: spravit overenie aby sa tam nedala vlozit nula
         System.out.println("Vložte X-ovú súradnicu:");
         userInput.setXCoordinate(readInput.nextInt(10));
         System.out.println("Vložte Y-lónovú súradnicu:");
         userInput.setYCoordinate(readInput.nextInt(10));
         System.out.println("Vyberte si jednu z možností");
-        userInput.setShape(readInput.nextInt(3));
+        userInput.setShape(readInput.nextInt(4)-1);
 
         return userInput;
     }

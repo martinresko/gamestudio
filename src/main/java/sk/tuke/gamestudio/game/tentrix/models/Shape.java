@@ -88,6 +88,7 @@ public class Shape {
         return shape;
     }
 
+    //TODO: spravit rotaciu
     public void rotate() {
         orientation++;
     }
