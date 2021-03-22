@@ -5,7 +5,7 @@ import lombok.Setter;
 import sk.tuke.gamestudio.game.tentrix.enums.GameState;
 import sk.tuke.gamestudio.game.tentrix.enums.TileState;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Setter
@@ -22,7 +22,7 @@ public class Field {
 
    private final Tile[][] tiles;
 
-   private List<Shape> shapes = new ArrayList();
+   private List<Shape> shapes = new LinkedList<>();
 
     public Field(int rowCount, int colCount, int shapeCount) {
         this.rowCount = rowCount;

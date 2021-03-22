@@ -23,10 +23,24 @@ public class Shape {
     private String pattern;
     private int orientation;
 
-    private static int[][] coordinates = {{}};
-
-    public static int[][] getCoordinates() {
-        return coordinates;
+    public int[][] provideShapeCoordinates () {
+        switch (this.type) {
+            case O:
+                return O_COORDINATES;
+            case I:
+                return I_COORDINATES;
+            case S:
+                return S_COORDINATES;
+            case Z:
+                return Z_COORDINATES;
+            case J:
+                return J_COORDINATES;
+            case L:
+                return L_COORDINATES;
+            case T:
+                return T_COORDINATES;
+        }
+        return null;
     }
 
     public static Shape create() {
@@ -38,31 +52,36 @@ public class Shape {
         switch (shape.type) {
             case O:
                 shape.pattern = "XX \nXX";
-                coordinates = O_COORDINATES.clone();
                 break;
             case I:
-                shape.pattern = "XXXX";
-                coordinates = I_COORDINATES.clone();
-                break;
-            case Z:
-                shape.pattern = "XX \n XX";
-                coordinates = Z_COORDINATES.clone();
+                shape.pattern = "X\nX\nX\nX\n";
+                //shape.pattern = "XXXX";
                 break;
             case S:
                 shape.pattern = " XX \nXX ";
-                coordinates = S_COORDINATES.clone();
+                //shape.pattern = "X \nXX\n X";
+                break;
+            case Z:
+                shape.pattern = "XX \n XX";
+                //shape.pattern = " X\nXX\nX ";
                 break;
             case J:
-                shape.pattern = "X  \nXXX";
-                coordinates = J_COORDINATES.clone();
+                shape.pattern = " X\n X\nXX";
+                //shape.pattern = "X  \nXXX";
+                //shape.pattern = "XX\nX \nX ";
+                //shape.pattern = "XXX\n  X";
                 break;
             case L:
-                shape.pattern = "  X \nXXX";
-                coordinates = L_COORDINATES.clone();
+                shape.pattern = "X \nX \nXX";
+                //shape.pattern = "XXX\nX  ";
+                //shape.pattern = "XX\n X\n X";
+                //shape.pattern = "  X\nXXX";
                 break;
             case T:
-                shape.pattern = "XXX \n X ";
-                coordinates = T_COORDINATES.clone();
+                shape.pattern = "XXX\n X ";
+                //shape.pattern = " X\nXX\n X";
+                //shape.pattern = " X \nXXX";
+                //shape.pattern = "X \nXX\nX ";
                 break;
         }
 
