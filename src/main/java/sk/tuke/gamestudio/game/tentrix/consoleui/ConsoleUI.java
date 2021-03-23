@@ -65,7 +65,7 @@ public class ConsoleUI {
         AtomicInteger shapeIndex = new AtomicInteger();
         field.getShapes().forEach(shape -> {
             System.out.println("Moznost cislo " + (shapeIndex.get() + 1) + ": ");
-            System.out.println(field.getShapes().get(shapeIndex.get()).getPattern());
+            System.out.println(field.getShapes().get(shapeIndex.get()).getPattern()[shape.getOrientation()]);
             shapeIndex.set(shapeIndex.get() + 1);
         });
     }
@@ -77,15 +77,15 @@ public class ConsoleUI {
         int[][] coordinates = shape.provideShapeCoordinates();
 
         try {
-            pickedTiles = this.gameEngineService.retrieveTiles(xCoordinate, yCoordinate, coordinates[0]);
+            pickedTiles = this.gameEngineService.retrieveTiles(xCoordinate, yCoordinate, coordinates[shape.getOrientation()]);
         } catch (Exception e) {
-            System.out.println("Nevojde sa ti to tam");
+            System.out.println("Nevojde sa ti to tam lebo si na okraji.");
             field.setState(GameState.FAILED);
             return;
         }
 
         if (gameEngineService.SpaceAvailabilityCheck(pickedTiles)) {
-            System.out.println("Nevojde sa ti to tam");
+            System.out.println("Nevojde sa ti to tam lebo je pole obsadene.");
             field.setState(GameState.FAILED);
             return;
         }
