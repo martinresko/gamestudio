@@ -30,16 +30,15 @@ public class ConsoleUI {
             clearFullLines();
             removeUsedShape(userInput.getShape());
 
-            //TODO: skontroluj, ci hrac neprehral
-            //checkForGameOver();
+            if(checkForGameOver(field.getRowCount(), field.getColCount())) {
+                field.setState(GameState.FAILED);
+            }
         } while (field.getState() == GameState.PLAYING);
 
         printField();
 
         if (field.getState() == GameState.FAILED) {
             System.out.println("Game failed!");
-        } else {
-            System.out.println("Game solved!");
         }
     }
 
@@ -80,13 +79,13 @@ public class ConsoleUI {
             pickedTiles = this.gameEngineService.retrieveTiles(xCoordinate, yCoordinate, coordinates[shape.getOrientation()]);
         } catch (Exception e) {
             System.out.println("Nevojde sa ti to tam lebo si na okraji.");
-            field.setState(GameState.FAILED);
+            //field.setState(GameState.FAILED);
             return;
         }
 
-        if (gameEngineService.SpaceAvailabilityCheck(pickedTiles)) {
+        if (!gameEngineService.isSpaceAvailable(pickedTiles)) {
             System.out.println("Nevojde sa ti to tam lebo je pole obsadene.");
-            field.setState(GameState.FAILED);
+            //field.setState(GameState.FAILED);
             return;
         }
 
@@ -100,6 +99,21 @@ public class ConsoleUI {
         }
     }
 
-/*    private void checkForGameOver() {
-    }*/
+    //returns true if game is over (you have no move left)
+    private Boolean checkForGameOver(int rowCount, int colCount) {
+        for (int row = 0; row < rowCount; row++) {
+
+            for (int column = 0; column < colCount; column++) {
+
+                Tile tile = field.getTile(column, row);
+                if (tile.getState() == TileState.EMPTY) {
+                    if (gameEngineService.checkForOneTile(column, row)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }

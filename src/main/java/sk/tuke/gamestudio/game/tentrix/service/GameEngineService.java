@@ -3,6 +3,7 @@ package sk.tuke.gamestudio.game.tentrix.service;
 import lombok.AllArgsConstructor;
 import sk.tuke.gamestudio.game.tentrix.enums.TileState;
 import sk.tuke.gamestudio.game.tentrix.models.Field;
+import sk.tuke.gamestudio.game.tentrix.models.Shape;
 import sk.tuke.gamestudio.game.tentrix.models.Tile;
 import sk.tuke.gamestudio.game.tentrix.models.UserInput;
 
@@ -17,8 +18,11 @@ public class GameEngineService {
 
     private final Scanner readInput = new Scanner(System.in);
 
-    public boolean SpaceAvailabilityCheck(List<Tile> pickedTiles) {
-        return pickedTiles.stream().anyMatch(tile -> tile.getState() == TileState.FULL);
+    /*
+        Returns true if space is available.
+     */
+    public boolean isSpaceAvailable(List<Tile> pickedTiles) {
+        return pickedTiles.stream().allMatch(tile -> tile.getState() == TileState.EMPTY);
     }
 
     public List<Tile> retrieveTiles(int xCoordinate, int yCoordinate, int[] coordinates) {
@@ -56,7 +60,7 @@ public class GameEngineService {
     public UserInput gainUserInput() {
         UserInput userInput = new UserInput();
 
-        //TODO: spravit overenie aby sa tam nedala vlozit nula
+        //TODO: spravit overenie aby sa tam nedala vlozit nula, pismeno atd....
         System.out.println("Vložte X-ovú súradnicu:");
         userInput.setXCoordinate(readInput.nextInt(10));
         System.out.println("Vložte Y-lónovú súradnicu:");
@@ -85,6 +89,24 @@ public class GameEngineService {
             }
             tilesInRow.clear();
         }
+    }
+
+    //ak hociaky je available vrati true
+    public boolean checkForOneTile(int column, int row) {
+
+        for (Shape shape : field.getShapes()) {
+            List<Tile> list;
+            try {
+                list = retrieveTiles(column, row, shape.provideShapeCoordinates()[shape.getOrientation()]);
+            } catch (Exception ignored) {
+                break;
+            }
+
+            if(isSpaceAvailable(list)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
